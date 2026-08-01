@@ -162,7 +162,7 @@ function DashboardLayout() {
             <Route path="/households" element={<AuthGuard allowedRoles={['worker']}><Households /></AuthGuard>} />
             <Route path="/households/:id" element={<AuthGuard allowedRoles={['worker']}><HouseholdDetail /></AuthGuard>} />
             <Route path="/visits/new" element={<AuthGuard allowedRoles={['worker']}><RecordVisit /></AuthGuard>} />
-            <Route path="/visits/:id" element={<AuthGuard allowedRoles={['worker']}><VisitDetail /></AuthGuard>} />
+            <Route path="/visits/:id" element={<AuthGuard allowedRoles={['worker', 'supervisor']}><VisitDetail /></AuthGuard>} />
 
             {/* Supervisor Protected Routes */}
             <Route path="/supervisor" element={<AuthGuard allowedRoles={['supervisor']}><SupervisorDashboard /></AuthGuard>} />
