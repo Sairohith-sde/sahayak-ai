@@ -13,6 +13,49 @@ export function setOfflineSimulation(val) {
 }
 
 /**
+ * Robust Gemini API Runner
+ * Calls official Google Gemini API, falling back to Ollama if key is missing or service is down.
+ */
+async function callGemini(prompt, jsonMode = false) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY environment variable is not defined.');
+  }
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [
+        {
+          parts: [
+            {
+              text: prompt
+            }
+          ]
+        }
+      ],
+      generationConfig: {
+        temperature: 0.1,
+        ...(jsonMode ? { responseMimeType: 'application/json' } : {})
+      }
+    };
+
+    const response = await axios.post(url, payload, {
+      timeout: 10000 // 10 seconds timeout
+    });
+
+    const text = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      throw new Error('Empty response from Gemini API.');
+    }
+    return text;
+  } catch (error) {
+    const errorMsg = error.response?.data?.error?.message || error.message;
+    throw new Error(`Gemini API error: ${errorMsg}`);
+  }
+}
+
+/**
  * Robust Ollama API Runner
  * Calls local Ollama service, falling back immediately to local heuristic parser if down.
  */
@@ -38,6 +81,27 @@ async function callOllama(prompt, jsonMode = false) {
   } catch (error) {
     throw new Error(`Ollama service unavailable: ${error.message}`);
   }
+}
+
+/**
+ * Unified 3-Tier LLM Orchestrator
+ * Tier 1: Gemini API (Cloud)
+ * Tier 2: Ollama (Local LLM)
+ * Tier 3: Deterministic Fallback Parser (Local Heuristics)
+ */
+async function callLLM(prompt, jsonMode = false) {
+  // Tier 1: Attempt Gemini API
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      console.log('🔮 Routing pipeline request to Gemini API (Tier 1)...');
+      return await callGemini(prompt, jsonMode);
+    } catch (err) {
+      console.warn(`⚠️ Gemini API failed, falling back: ${err.message}`);
+    }
+  }
+
+  // Tier 2: Attempt Ollama Local LLM
+  return await callOllama(prompt, jsonMode);
 }
 
 /**
@@ -70,7 +134,7 @@ Respond ONLY with the JSON object. Do not include any preambles or markdown form
 `;
 
   try {
-    const rawRes = await callOllama(prompt, true);
+    const rawRes = await callLLM(prompt, true);
     const parsed = JSON.parse(rawRes);
     parsed.source = 'ai';
     return parsed;
@@ -115,7 +179,7 @@ Respond ONLY with the JSON object. Do not include any preambles.
 `;
 
   try {
-    const rawRes = await callOllama(prompt, true);
+    const rawRes = await callLLM(prompt, true);
     const parsed = JSON.parse(rawRes);
     parsed.source = 'ai';
     return parsed;
@@ -190,7 +254,7 @@ Respond ONLY with the JSON object. Do not include any preambles.
 `;
 
   try {
-    const rawRes = await callOllama(prompt, true);
+    const rawRes = await callLLM(prompt, true);
     const parsed = JSON.parse(rawRes);
     
     // Safety guardrail post-processing check
@@ -268,20 +332,18 @@ const TRANSLATION_MAP = [
 
 function translateTextToEnglish(text) {
   if (!text) return '';
-  let cleaned = String(text);
+  const cleaned = String(text).trim();
   
-  TRANSLATION_MAP.forEach(item => {
+  // Find the first matching pattern in TRANSLATION_MAP and return its formal translation immediately to prevent recursive replacement bugs
+  for (const item of TRANSLATION_MAP) {
     if (item.pattern.test(cleaned)) {
-      cleaned = cleaned.replace(item.pattern, item.repl);
+      return item.repl;
     }
-  });
-  
-  // Strip any remaining non-ASCII regional script characters to guarantee pure English reports
+  }
+
+  // If no pattern matched but it contains regional characters, strip them or return fallback
   if (/[^\x00-\x7F]/.test(cleaned)) {
-    cleaned = cleaned.replace(/[^\x00-\x7F]+/g, '').trim();
-    if (!cleaned || cleaned.length < 5) {
-      cleaned = "Patient health observations recorded during local home visit.";
-    }
+    return "Patient clinical observations checked.";
   }
   
   return cleaned;
@@ -289,7 +351,11 @@ function translateTextToEnglish(text) {
 
 function translateArrayToEnglish(arr) {
   if (!Array.isArray(arr)) return [];
-  return arr.map(item => translateTextToEnglish(item)).filter(Boolean);
+  return arr
+    .map(item => translateTextToEnglish(item))
+    .filter(Boolean)
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
 }
 
 /**
