@@ -267,7 +267,7 @@ export default function VisitDetail() {
         ref={printComponentRef} 
         className="printable-report bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04)] border border-[#E2E8F0] p-8 space-y-6 print:border-none print:shadow-none print:p-1.5 print:space-y-2.5"
       >
-        {/* Embedded print overrides to guarantee perfect 1-page 75% scaling */}
+        {/* Embedded print overrides to guarantee perfect full-page 100% scaling */}
         <style dangerouslySetInnerHTML={{__html: `
           @media print {
             @page {
@@ -275,7 +275,7 @@ export default function VisitDetail() {
               margin: 6mm 10mm 6mm 10mm !important;
             }
             .printable-report {
-              zoom: 75% !important;
+              zoom: 100% !important;
               width: 100% !important;
               height: auto !important;
               margin: 0 !important;
@@ -284,15 +284,13 @@ export default function VisitDetail() {
               border: none !important;
               background: #ffffff !important;
             }
-            /* Collapse all parent flexbox layouts and heights during print */
-            html, body, #root, .min-h-screen, main, div {
+            /* Collapse parent wrapper heights during print */
+            html, body, #root {
               display: block !important;
               height: auto !important;
               min-height: 0 !important;
               max-height: none !important;
               overflow: visible !important;
-              transform: none !important;
-              box-shadow: none !important;
             }
           }
         `}} />
