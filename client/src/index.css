@@ -132,19 +132,26 @@
   html, body {
     width: 100% !important;
     height: auto !important;
+    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #ffffff !important;
     color: #000000 !important;
-    zoom: 100% !important;
-    scale: 1 !important;
+    zoom: 95% !important; /* Slightly scale down to guarantee single-page safety */
+    scale: 0.95 !important;
     transform: none !important;
+    display: block !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-  #root {
-    width: 100% !important;
+  #root, .min-h-screen, main, div {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
     transform: none !important;
+    box-shadow: none !important;
   }
   .no-print {
     display: none !important;
