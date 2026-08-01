@@ -265,8 +265,38 @@ export default function VisitDetail() {
 
       <div 
         ref={printComponentRef} 
-        className="bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04)] border border-[#E2E8F0] p-8 space-y-6 print:border-none print:shadow-none print:p-1.5 print:space-y-2.5"
+        className="printable-report bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04)] border border-[#E2E8F0] p-8 space-y-6 print:border-none print:shadow-none print:p-1.5 print:space-y-2.5"
       >
+        {/* Embedded print overrides to guarantee perfect 1-page 75% scaling */}
+        <style dangerouslySetInnerHTML={{__html: `
+          @media print {
+            @page {
+              size: A4 portrait;
+              margin: 6mm 10mm 6mm 10mm !important;
+            }
+            .printable-report {
+              zoom: 75% !important;
+              width: 100% !important;
+              height: auto !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              box-shadow: none !important;
+              border: none !important;
+              background: #ffffff !important;
+            }
+            /* Collapse all parent flexbox layouts and heights during print */
+            html, body, #root, .min-h-screen, main, div {
+              display: block !important;
+              height: auto !important;
+              min-height: 0 !important;
+              max-height: none !important;
+              overflow: visible !important;
+              transform: none !important;
+              box-shadow: none !important;
+            }
+          }
+        `}} />
+
         {/* Top Header Band */}
         <div className="bg-[#0A1628] text-white p-6 rounded-t-lg -mx-8 -mt-8 flex flex-col md:flex-row print:flex-row md:items-center print:items-center justify-between gap-4 print:bg-[#0A1628] print:text-white print:-mx-0 print:-mt-0 print:p-2.5 print:py-2 print:rounded-none">
           <div className="space-y-0.5">
