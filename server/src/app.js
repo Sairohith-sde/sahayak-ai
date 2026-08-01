@@ -31,7 +31,7 @@ app.use(async (req, res, next) => {
 
 // Enable Cross-Origin Resource Sharing for Vite client (localhost:5173)
 app.use(cors({
-  origin: [process.env.CLIENT_URL, 'http://localhost:5173', 'https://client-beryl-three-55.vercel.app'].filter(Boolean),
+  origin: [process.env.CLIENT_URL, 'http://localhost:5173', 'https://client-beryl-three-55.vercel.app', 'https://sahayak-portal-nhm.vercel.app'].filter(Boolean),
   credentials: true
 }));
 
