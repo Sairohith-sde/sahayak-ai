@@ -144,7 +144,7 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-  #root, .min-h-screen, main, div {
+  #root, .min-h-screen, main {
     display: block !important;
     height: auto !important;
     min-height: 0 !important;
