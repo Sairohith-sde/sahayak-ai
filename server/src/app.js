@@ -13,7 +13,16 @@ import { seedData } from './data/seed.js';
 
 const app = express();
 
-// On-Demand Serverless DB Initialization & Seeding Middleware
+// 1. Enable Cross-Origin Resource Sharing immediately at the entrypoint (bypasses DB connection delays)
+const corsMiddleware = cors({
+  origin: [process.env.CLIENT_URL, 'http://localhost:5173', 'https://client-beryl-three-55.vercel.app', 'https://sahayak-portal-nhm.vercel.app'].filter(Boolean),
+  credentials: true
+});
+
+app.use(corsMiddleware);
+app.options('*', corsMiddleware);
+
+// 2. On-Demand Serverless DB Initialization & Seeding Middleware
 let dbConnected = false;
 app.use(async (req, res, next) => {
   if (!dbConnected) {
@@ -27,15 +36,6 @@ app.use(async (req, res, next) => {
   }
   next();
 });
-
-// Enable Cross-Origin Resource Sharing for Vite client (localhost:5173)
-const corsMiddleware = cors({
-  origin: [process.env.CLIENT_URL, 'http://localhost:5173', 'https://client-beryl-three-55.vercel.app', 'https://sahayak-portal-nhm.vercel.app'].filter(Boolean),
-  credentials: true
-});
-
-app.use(corsMiddleware);
-app.options('*', corsMiddleware);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
