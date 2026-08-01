@@ -129,9 +129,22 @@
     size: A4 portrait;
     margin: 6mm 10mm 6mm 10mm;
   }
-  body {
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
     background: #ffffff !important;
     color: #000000 !important;
+    zoom: 100% !important;
+    scale: 1 !important;
+    transform: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  #root {
+    width: 100% !important;
+    transform: none !important;
   }
   .no-print {
     display: none !important;
