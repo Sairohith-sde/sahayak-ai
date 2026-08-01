@@ -60,12 +60,12 @@ export async function login(req, res) {
 
     const user = await repository.getOne('User', { email: email.toLowerCase() });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials. User not found.' });
+      return res.status(401).json({ message: 'Invalid credentials. Please verify your email and password.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials. Password mismatch.' });
+      return res.status(401).json({ message: 'Invalid credentials. Please verify your email and password.' });
     }
 
     // Sign Token
