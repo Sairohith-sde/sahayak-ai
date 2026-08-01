@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import path from 'express';
 import authRoutes from './routes/auth.js';
 import householdRoutes from './routes/household.js';
 import visitRoutes from './routes/visit.js';
@@ -30,10 +29,13 @@ app.use(async (req, res, next) => {
 });
 
 // Enable Cross-Origin Resource Sharing for Vite client (localhost:5173)
-app.use(cors({
+const corsMiddleware = cors({
   origin: [process.env.CLIENT_URL, 'http://localhost:5173', 'https://client-beryl-three-55.vercel.app', 'https://sahayak-portal-nhm.vercel.app'].filter(Boolean),
   credentials: true
-}));
+});
+
+app.use(corsMiddleware);
+app.options('*', corsMiddleware);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
