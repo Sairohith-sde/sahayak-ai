@@ -228,7 +228,7 @@ export default function WorkerDashboard() {
       {/* 2. Worker Summary Stats (4 Grid Cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Stat Card 1: Total Households */}
-        <div className="bg-white p-5 rounded-lg border border-[#E2E8F0] flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] h-28 relative overflow-hidden hover:shadow-md transition-shadow">
+        <div className="premium-glass-card p-5 rounded-lg flex flex-col justify-between h-28 relative overflow-hidden hover:scale-[1.01] hover:shadow-lg transition-all duration-300">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Households</span>
@@ -243,7 +243,7 @@ export default function WorkerDashboard() {
         </div>
 
         {/* Stat Card 2: Critical Cases */}
-        <div className="bg-white p-5 rounded-lg border border-[#E2E8F0] border-l-4 border-l-[#DC2626] flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] h-28 relative overflow-hidden hover:shadow-md transition-shadow">
+        <div className={`premium-glass-card p-5 rounded-lg border-l-4 border-l-[#DC2626] flex flex-col justify-between h-28 relative overflow-hidden hover:scale-[1.01] hover:shadow-lg transition-all duration-300 ${stats?.criticalCount > 0 ? 'glow-critical-badge' : ''}`}>
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-[#9CA3AF] uppercase tracking-wider">Critical Cases</span>
@@ -258,7 +258,7 @@ export default function WorkerDashboard() {
         </div>
 
         {/* Stat Card 3: High Cases */}
-        <div className="bg-white p-5 rounded-lg border border-[#E2E8F0] border-l-4 border-l-[#EA580C] flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] h-28 relative overflow-hidden hover:shadow-md transition-shadow">
+        <div className={`premium-glass-card p-5 rounded-lg border-l-4 border-l-[#EA580C] flex flex-col justify-between h-28 relative overflow-hidden hover:scale-[1.01] hover:shadow-lg transition-all duration-300 ${stats?.highCount > 0 ? 'glow-high-badge' : ''}`}>
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-[#9CA3AF] uppercase tracking-wider">High Priority</span>
@@ -273,7 +273,7 @@ export default function WorkerDashboard() {
         </div>
 
         {/* Stat Card 4: Weekly Performance */}
-        <div className="bg-white p-5 rounded-lg border border-[#E2E8F0] flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] h-28 relative overflow-hidden hover:shadow-md transition-shadow">
+        <div className="premium-glass-card p-5 rounded-lg flex flex-col justify-between h-28 relative overflow-hidden hover:scale-[1.01] hover:shadow-lg transition-all duration-300">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-semibold">Visits This Week</span>
@@ -289,7 +289,7 @@ export default function WorkerDashboard() {
       </div>
 
       {/* 3. Prioritized Task Table / Ledger */}
-      <div className="bg-white rounded-lg border border-[#E2E8F0] shadow-[0_4px_12px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04)] overflow-hidden">
+      <div className="premium-glass-card rounded-lg overflow-hidden shadow-lg border border-[#E2E8F0]">
         {/* Table Header Section */}
         <div className="bg-[#0A1628] px-6 py-4 flex items-center justify-between border-b border-[#E2E8F0]">
           <h3 className="text-sm font-semibold text-white uppercase tracking-wider">

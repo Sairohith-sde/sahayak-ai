@@ -182,7 +182,7 @@ export default function PipelineView() {
       </div>
 
       {/* Offline Mode Controller Panel (IMPROVEMENT 4) */}
-      <div className="bg-white border border-[#CBD5E1] rounded-xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="premium-glass-card border border-[#CBD5E1] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow">
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
             <Server className={`w-5 h-5 ${debugState?.enabled ? 'text-[#D97706]' : 'text-[#0D7A6F]'}`} />
@@ -245,7 +245,7 @@ export default function PipelineView() {
           const accuracyPercent = Math.round((matches / total) * 100);
 
           return (
-            <div className="bg-white border border-[#E2E8F0] rounded-xl p-6 shadow-sm space-y-5">
+            <div className="premium-glass-card border border-[#E2E8F0] rounded-xl p-6 space-y-5 shadow">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-3 gap-3">
                 <div className="space-y-1">
                   <h3 className="text-xs font-bold text-[#0A1628] uppercase tracking-wider flex items-center space-x-1.5">
@@ -377,7 +377,7 @@ export default function PipelineView() {
         })()
       )}
 
-      <div className="bg-white border border-slate-200 rounded-lg p-6 grid grid-cols-1 md:grid-cols-3 gap-6 shadow-sm">
+      <div className="premium-glass-card border border-slate-200 rounded-lg p-6 grid grid-cols-1 md:grid-cols-3 gap-6 shadow">
         <div className="md:col-span-2 space-y-3">
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">What is this Audit View?</h3>
           <p className="text-xs text-slate-600 leading-relaxed">
@@ -414,10 +414,10 @@ export default function PipelineView() {
             </div>
 
             {/* Stage content details card */}
-            <div className={`flex-grow bg-white border rounded-lg p-5 transition-all duration-300 ${
+            <div className={`flex-grow rounded-lg p-5 transition-all duration-300 border ${
               stage.active 
-                ? 'border-green-300 shadow-sm shadow-green-50' 
-                : 'border-slate-200 opacity-60'
+                ? 'premium-glass-card border-green-300 shadow-md shadow-green-50/20 glow-border-teal' 
+                : 'bg-white border-slate-200 opacity-60'
             }`}>
               <div className="flex items-center justify-between border-b pb-2 mb-3">
                 <h4 className="text-sm font-bold uppercase text-slate-900 tracking-wider">

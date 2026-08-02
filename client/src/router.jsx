@@ -58,7 +58,10 @@ function DashboardLayout() {
               <div className="bg-[#0F9B8E] rounded-xs"></div>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-base font-bold tracking-tight text-white leading-none">SAHAYAK AI</h1>
+              <div className="flex items-center space-x-2">
+                <h1 className="text-base font-bold tracking-tight text-white leading-none">SAHAYAK AI</h1>
+                <span className="connection-dot" title="Operational connection to National Health Mission server active"></span>
+              </div>
               <p className="text-[10px] text-[#13B5A6] font-semibold mt-0.5 tracking-wider uppercase">
                 National Health Mission • Decision Portal
               </p>

@@ -126,7 +126,7 @@ export default function SupervisorDashboard() {
       {/* Stats Bar (Unresolved, Resolved, Supervised Workers) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Unresolved count */}
-        <div className="bg-white p-5 rounded-lg border border-[#E2E8F0] border-l-4 border-l-[#DC2626] flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] h-28 relative overflow-hidden hover:shadow-md transition-shadow">
+        <div className={`premium-glass-card p-5 rounded-lg border-l-4 border-l-[#DC2626] flex flex-col justify-between h-28 relative overflow-hidden hover:scale-[1.01] hover:shadow-lg transition-all duration-300 ${stats?.unresolvedCount > 0 ? 'glow-critical-badge' : ''}`}>
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Unresolved Alerts</span>
@@ -141,7 +141,7 @@ export default function SupervisorDashboard() {
         </div>
 
         {/* Resolved Today */}
-        <div className="bg-white p-5 rounded-lg border border-[#E2E8F0] border-l-4 border-l-[#16A34A] flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] h-28 relative overflow-hidden hover:shadow-md transition-shadow">
+        <div className="premium-glass-card p-5 rounded-lg border-l-4 border-l-[#16A34A] flex flex-col justify-between h-28 relative overflow-hidden hover:scale-[1.01] hover:shadow-lg transition-all duration-300">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Resolved Escalations</span>
@@ -156,7 +156,7 @@ export default function SupervisorDashboard() {
         </div>
 
         {/* Total Supervised Workers */}
-        <div className="bg-white p-5 rounded-lg border border-[#E2E8F0] flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] h-28 relative overflow-hidden hover:shadow-md transition-shadow">
+        <div className="premium-glass-card p-5 rounded-lg flex flex-col justify-between h-28 relative overflow-hidden hover:scale-[1.01] hover:shadow-lg transition-all duration-300">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Active Supervised Workers</span>
@@ -172,7 +172,7 @@ export default function SupervisorDashboard() {
       </div>
 
       {/* Escalation Table */}
-      <div className="bg-white rounded-lg border border-[#E2E8F0] shadow-[0_4px_12px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04)] overflow-hidden">
+      <div className="premium-glass-card rounded-lg shadow-lg overflow-hidden border border-[#E2E8F0]">
         {/* Table Header Row */}
         <div className="bg-[#0A1628] px-6 py-4 flex items-center justify-between border-b border-[#E2E8F0]">
           <h3 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center space-x-2">
