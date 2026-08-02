@@ -25,6 +25,9 @@ app.options('*', corsMiddleware);
 // 2. On-Demand Serverless DB Initialization & Seeding Middleware
 let dbConnected = false;
 app.use(async (req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    return next();
+  }
   if (!dbConnected) {
     try {
       await connectDB();
