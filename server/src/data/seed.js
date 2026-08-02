@@ -11,13 +11,6 @@ export async function seedData() {
   }
   isSeedingInProgress = true;
   try {
-    const seedEnabled = process.env.SEED_SAMPLE_DATA === 'true' || !isMongoMode();
-    if (!seedEnabled) {
-      console.log("ℹ️ Auto-seeding skipped (SEED_SAMPLE_DATA is not true and database is in MongoDB mode).");
-      isSeedingInProgress = false;
-      return;
-    }
-
     // Check if seeding is already done (by checking if Rani exists)
     const existingWorker = await repository.getOne('User', { email: 'rani.worker@sahayak.ai' });
     if (existingWorker) {
