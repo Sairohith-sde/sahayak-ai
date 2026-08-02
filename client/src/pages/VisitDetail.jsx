@@ -207,7 +207,7 @@ export default function VisitDetail() {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3.5">
-            {visit.trace.map((t, idx) => {
+            {(visit.trace || []).map((t, idx) => {
               const statusColors = t.status === 'complete' 
                 ? 'text-[#166534] bg-[#F0FDF4] border-[#16A34A]' 
                 : t.status === 'fallback' 

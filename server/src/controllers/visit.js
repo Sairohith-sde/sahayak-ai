@@ -115,17 +115,34 @@ function getRiskScore(level) {
 export async function getVisits(req, res) {
   try {
     let { workerId } = req.query;
+    let visits = [];
 
-    // Enforce worker scoping
+    // Enforce role-based scoping
     if (req.user.role === 'worker') {
       workerId = req.user._id || req.user.id;
-    }
+      visits = await repository.getAll('Visit', { workerId });
+    } else if (req.user.role === 'supervisor') {
+      const supervisorId = req.user._id || req.user.id;
+      // Get all workers supervised by this supervisor
+      const supervisedWorkers = await repository.getAll('User', { supervisorId });
+      const supervisedWorkerIds = supervisedWorkers.map(w => String(w._id || w.id));
 
-    if (!workerId) {
-      return res.status(400).json({ message: 'workerId parameter is required.' });
+      if (workerId && workerId !== 'sharma') {
+        if (!supervisedWorkerIds.includes(String(workerId))) {
+          return res.status(403).json({ message: 'Access Denied. You do not supervise this worker.' });
+        }
+        visits = await repository.getAll('Visit', { workerId });
+      } else {
+        // Fetch visits for ALL workers supervised by this supervisor
+        visits = await repository.getAll('Visit', { workerId: { $in: supervisedWorkerIds } });
+      }
+    } else {
+      if (workerId) {
+        visits = await repository.getAll('Visit', { workerId });
+      } else {
+        visits = await repository.getAll('Visit');
+      }
     }
-
-    const visits = await repository.getAll('Visit', { workerId });
     
     // Sort by risk priority (critical -> high -> medium -> low)
     const sortedVisits = visits.sort((a, b) => {
@@ -157,7 +174,28 @@ export async function getVisitById(req, res) {
       return res.status(403).json({ message: 'Access Denied. You do not own this visit record.' });
     }
 
-    res.status(200).json(visit);
+    // Fully hydrate householdId and workerId nested objects so patient metadata displays on page refresh
+    const household = await repository.getById('Household', visit.householdId);
+    const worker = await repository.getById('User', visit.workerId);
+
+    const hydratedVisit = {
+      ...visit,
+      householdId: household ? {
+        _id: household._id || household.id,
+        id: household._id || household.id,
+        name: household.name,
+        village: household.village,
+        category: household.category
+      } : visit.householdId,
+      workerId: worker ? {
+        _id: worker._id || worker.id,
+        id: worker._id || worker.id,
+        name: worker.name,
+        email: worker.email
+      } : visit.workerId
+    };
+
+    res.status(200).json(hydratedVisit);
   } catch (error) {
     res.status(500).json({ message: `Failed to retrieve visit: ${error.message}` });
   }

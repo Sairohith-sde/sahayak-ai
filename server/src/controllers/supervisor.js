@@ -18,9 +18,18 @@ export async function getSupervisorEscalations(req, res) {
       supervisorId
     });
 
+    // Deduplicate escalations safely by ID
+    const seenIds = new Set();
+    const uniqueEscalations = escalations.filter(esc => {
+      const idStr = String(esc._id || esc.id);
+      if (seenIds.has(idStr)) return false;
+      seenIds.add(idStr);
+      return true;
+    });
+
     // Hydrate/join details manually so that it works identically in BOTH MongoDB and Memory Modes!
     const hydratedEscalations = [];
-    for (const esc of escalations) {
+    for (const esc of uniqueEscalations) {
       const visit = await repository.getById('Visit', esc.visitId);
       if (!visit) continue;
 
@@ -64,8 +73,11 @@ export async function getSupervisorEscalations(req, res) {
 export async function resolveEscalation(req, res) {
   try {
     const { id } = req.params;
-    const escalation = await repository.getById('Escalation', id);
+    if (!id) {
+      return res.status(400).json({ message: 'Escalation ID is required.' });
+    }
 
+    const escalation = await repository.getById('Escalation', id);
     if (!escalation) {
       return res.status(404).json({ message: 'Escalation record not found.' });
     }
@@ -81,11 +93,19 @@ export async function resolveEscalation(req, res) {
       resolvedAt: new Date()
     });
 
+    if (!resolvedEscalation) {
+      return res.status(500).json({ message: 'Failed to update escalation record.' });
+    }
+
     // Update the associated Visit status back to 'reviewed'
     if (escalation.visitId) {
-      await repository.updateById('Visit', escalation.visitId, {
-        status: 'reviewed'
-      });
+      try {
+        await repository.updateById('Visit', escalation.visitId, {
+          status: 'reviewed'
+        });
+      } catch (visitUpdateErr) {
+        console.warn(`⚠️ Warning: Could not update associated visit status: ${visitUpdateErr.message}`);
+      }
     }
 
     res.status(200).json({

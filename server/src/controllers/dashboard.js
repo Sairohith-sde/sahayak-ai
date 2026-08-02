@@ -29,10 +29,10 @@ export async function getWorkerDashboardStats(req, res) {
     });
 
     const activeVisits = Object.values(householdStatusMap);
-    const criticalCount = activeVisits.filter(v => v.riskLevel === 'critical').length;
-    const highCount = activeVisits.filter(v => v.riskLevel === 'high').length;
-    const mediumCount = activeVisits.filter(v => v.riskLevel === 'medium').length;
-    const lowCount = activeVisits.filter(v => v.riskLevel === 'low').length;
+    const criticalCount = activeVisits.filter(v => String(v.riskLevel).toLowerCase() === 'critical').length;
+    const highCount = activeVisits.filter(v => String(v.riskLevel).toLowerCase() === 'high').length;
+    const mediumCount = activeVisits.filter(v => String(v.riskLevel).toLowerCase() === 'medium').length;
+    const lowCount = activeVisits.filter(v => String(v.riskLevel).toLowerCase() === 'low').length;
 
     // 3. Visits this week (last 7 days)
     const sevenDaysAgo = new Date();

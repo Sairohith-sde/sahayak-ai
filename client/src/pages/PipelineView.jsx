@@ -88,8 +88,7 @@ export default function PipelineView() {
   const { data: visits, isLoading: visitsLoading } = useQuery({
     queryKey: ['visits', workerId],
     queryFn: async () => {
-      // If supervisor, we can fetch all visits or leave counts to check activations.
-      const endpoint = isWorker ? `/visits?workerId=${workerId}` : '/visits?workerId=sharma'; // fallback dummy check
+      const endpoint = isWorker ? `/visits?workerId=${workerId}` : '/visits';
       try {
         const res = await api.get(endpoint);
         return res.data;

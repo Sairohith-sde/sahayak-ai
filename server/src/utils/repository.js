@@ -177,9 +177,17 @@ export const repository = {
     } else {
       if (!MEMORY_DB[collection]) return false;
       const initialLength = MEMORY_DB[collection].length;
+      
       const itemsToKeep = MEMORY_DB[collection].filter(item => {
-        return !Object.entries(filter).every(([key, val]) => String(item[key]) === String(val));
+        const matchesFilter = Object.entries(filter).every(([key, val]) => {
+          if (val && typeof val === 'object' && val.$in) {
+            return val.$in.map(String).includes(String(item[key]));
+          }
+          return String(item[key]) === String(val);
+        });
+        return !matchesFilter;
       });
+      
       MEMORY_DB[collection] = itemsToKeep;
       return MEMORY_DB[collection].length < initialLength;
     }

@@ -2,11 +2,19 @@ import bcrypt from 'bcryptjs';
 import { repository } from '../utils/repository.js';
 import { isMongoMode } from '../config/db.js';
 
+let isSeedingInProgress = false;
+
 export async function seedData() {
+  if (isSeedingInProgress) {
+    console.log("ℹ️ Auto-seeding already in progress. Skipping duplicate request.");
+    return;
+  }
+  isSeedingInProgress = true;
   try {
     const seedEnabled = process.env.SEED_SAMPLE_DATA === 'true' || !isMongoMode();
     if (!seedEnabled) {
       console.log("ℹ️ Auto-seeding skipped (SEED_SAMPLE_DATA is not true and database is in MongoDB mode).");
+      isSeedingInProgress = false;
       return;
     }
 
@@ -14,6 +22,7 @@ export async function seedData() {
     const existingWorker = await repository.getOne('User', { email: 'rani.worker@sahayak.ai' });
     if (existingWorker) {
       console.log("ℹ️ Database already seeded. Skipping seeder.");
+      isSeedingInProgress = false;
       return;
     }
 
@@ -57,7 +66,8 @@ export async function seedData() {
       { id: "anil_gupta_house_static_id_2026", visitId: "anil_visit_static_id_2026", name: "Anil Gupta", village: "Haripura", category: "immunization", transcript: "Administered booster vaccine to Anil today. Child was cooperative, no redness or fever noted.", risk: "low", just: "Standard immunization booster administered; patient reports no adverse reactions." }
     ];
 
-    for (const data of seedHouses) {
+    for (let idx = 0; idx < seedHouses.length; idx++) {
+      const data = seedHouses[idx];
       // Create Household
       const house = await repository.create('Household', {
         _id: data.id,
@@ -74,7 +84,7 @@ export async function seedData() {
         institution: "National Health Mission, Community Care Initiative",
         householdName: data.name,
         healthWorker: "Rani Devi",
-        date: new Date().toLocaleDateString('en-IN'),
+        date: new Date(Date.now() - (idx + 1) * 12 * 3600 * 1000).toLocaleDateString('en-IN'),
         riskLevel: data.risk.toUpperCase(),
         summary: `Household visit recorded. System priority registered as ${data.risk.toUpperCase()}. Observations extracted: ${data.transcript}`,
         extractedDetails: {
@@ -90,7 +100,7 @@ export async function seedData() {
         _id: data.visitId,
         householdId,
         workerId,
-        timestamp: new Date(Date.now() - Math.random() * 86400000 * 3), // spread over last 3 days
+        timestamp: new Date(Date.now() - (idx + 1) * 12 * 3600 * 1000), // deterministic 12h intervals spread backwards
         inputMode: "typed",
         rawTranscript: data.transcript,
         extractedData: {
@@ -126,5 +136,7 @@ export async function seedData() {
     console.log("✨ Database successfully auto-seeded with 1 Supervisor, 1 Worker, 8 Households, 8 Visits, and 4 Escalations!");
   } catch (error) {
     console.error(`❌ Failed to seed database: ${error.message}`);
+  } finally {
+    isSeedingInProgress = false;
   }
 }
