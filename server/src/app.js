@@ -13,14 +13,32 @@ import { seedData } from './data/seed.js';
 
 const app = express();
 
-// 1. Enable Cross-Origin Resource Sharing immediately at the entrypoint (bypasses DB connection delays)
-const corsMiddleware = cors({
-  origin: [process.env.CLIENT_URL, 'http://localhost:5173', 'https://client-beryl-three-55.vercel.app', 'https://sahayak-portal-nhm.vercel.app'].filter(Boolean),
-  credentials: true
-});
+// 1. Enable Native Cross-Origin Resource Sharing immediately at the entrypoint
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    process.env.CLIENT_URL,
+    'http://localhost:5173',
+    'https://client-beryl-three-55.vercel.app',
+    'https://sahayak-portal-nhm.vercel.app'
+  ].filter(Boolean);
 
-app.use(corsMiddleware);
-app.options('*', corsMiddleware);
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  }
+
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+
+  // Short-circuit OPTIONS requests immediately
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+  next();
+});
 
 // 2. On-Demand Serverless DB Initialization & Seeding Middleware
 let dbConnected = false;
