@@ -1,0 +1,28 @@
+{
+  "name": "sahayak-ai-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test:setup": "npm install && npm run client:install && npm run server:install && npx playwright install chromium firefox msedge",
+    "client:install": "cd client && npm install",
+    "server:install": "cd server && npm install",
+    "test:unit": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:all": "npm run test:unit && npm run test:e2e",
+    "lint": "eslint client/src server/src --ext .js,.jsx"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.9.0",
+    "@playwright/test": "^1.44.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.1",
+    "supertest": "^7.0.0",
+    "vitest": "^1.6.0"
+  }
+}

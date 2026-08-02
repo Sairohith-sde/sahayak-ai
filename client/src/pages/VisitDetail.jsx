@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useReactToPrint } from 'react-to-print';
 import api from '../api/index.js';
 import { useAuthStore } from '../store/auth.js';
-import { ArrowLeft, Printer, Shield, Check, Info, Calendar, User, FileText, AlertTriangle, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Printer, Shield, Check, Info, Calendar, User, FileText, AlertTriangle, HelpCircle, Activity, Play, CheckCircle } from 'lucide-react';
 
 const LANGUAGE_LABELS = {
   'en-IN': 'ENGLISH',
@@ -40,7 +40,7 @@ export default function VisitDetail() {
     }
   });
 
-  // 2. Setup react-to-print handler (Requirements-compliant)
+  // 2. Setup react-to-print handler
   const handlePrint = useReactToPrint({
     content: () => printComponentRef.current,
     documentTitle: `Government_Health_Report_${id}`,
@@ -65,23 +65,24 @@ export default function VisitDetail() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg border border-slate-200 p-6 space-y-4">
-          <div className="h-6 w-1/3 skeleton-shimmer rounded"></div>
-          <div className="h-4 w-1/2 skeleton-shimmer rounded mt-2"></div>
+      <div className="space-y-6 max-w-4xl mx-auto bg-[#030712]">
+        <div className="bg-[#0b1329]/40 border border-white/5 rounded-2xl p-6 space-y-4 animate-pulse">
+          <div className="h-6 w-1/3 bg-slate-800 rounded"></div>
+          <div className="h-4 w-1/2 bg-slate-800 rounded mt-2"></div>
         </div>
-        <div className="h-96 bg-white border border-slate-200 rounded-lg skeleton-shimmer"></div>
+        <div className="h-96 bg-[#0b1329]/20 border border-white/5 rounded-2xl animate-pulse"></div>
       </div>
     );
   }
 
   if (error || !visit) {
     return (
-      <div className="p-12 bg-white border border-slate-200 rounded-xl text-center max-w-xl mx-auto shadow-sm space-y-4">
-        <AlertTriangle className="w-12 h-12 text-[#DC2626] mx-auto" />
-        <h3 className="font-bold text-[#0A1628] text-lg">Visit Record Not Found</h3>
-        <p className="text-sm text-slate-500">This visit record does not exist or you do not have permission to view it.</p>
-        <Link to="/" className="inline-flex h-9 items-center justify-center px-4 bg-[#1A3461] text-white font-bold text-xs uppercase rounded-lg tracking-wider hover:bg-[#0A1628] transition-all">
+      <div className="p-12 bg-red-500/5 border border-red-500/20 rounded-2xl text-center max-w-xl mx-auto shadow-2xl space-y-4 relative mt-12">
+        <div className="absolute -inset-[1px] bg-red-500/10 rounded-2xl -z-10 blur-sm"></div>
+        <AlertTriangle className="w-12 h-12 text-red-400 mx-auto animate-bounce" />
+        <h3 className="font-extrabold text-white text-base">Visit Record Not Found</h3>
+        <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-semibold">This visit record does not exist or you do not have permission to view it.</p>
+        <Link to="/" className="inline-flex h-10 items-center justify-center px-4 bg-[#0b1329] border border-white/5 hover:border-white/10 text-white font-extrabold text-xs uppercase rounded-xl tracking-wider hover:bg-slate-900 transition-all active:scale-[0.98]">
           Return to Dashboard
         </Link>
       </div>
@@ -93,35 +94,35 @@ export default function VisitDetail() {
     switch (String(visit.riskLevel).toLowerCase()) {
       case 'critical':
         return {
-          bg: 'bg-[#FEF2F2]',
-          border: 'border-[#DC2626]',
-          text: 'text-[#991B1B]',
-          badge: 'bg-[#DC2626] text-white',
-          banner: 'bg-[#FEF2F2] border-[#DC2626] text-[#991B1B]'
+          bg: 'bg-red-500/10',
+          border: 'border-red-500/35',
+          text: 'text-red-200',
+          badge: 'bg-red-500 text-white shadow-[0_0_12px_rgba(239,68,68,0.25)]',
+          banner: 'bg-red-500/10 border-red-500/25 text-red-200 shadow-[0_0_10px_rgba(239,68,68,0.1)]'
         };
       case 'high':
         return {
-          bg: 'bg-[#FFF7ED]',
-          border: 'border-[#EA580C]',
-          text: 'text-[#9A3412]',
-          badge: 'bg-[#EA580C] text-white',
-          banner: 'bg-[#FFF7ED] border-[#EA580C] text-[#9A3412]'
+          bg: 'bg-amber-500/10',
+          border: 'border-amber-500/35',
+          text: 'text-amber-200',
+          badge: 'bg-amber-500 text-white shadow-[0_0_10px_rgba(245,158,11,0.2)]',
+          banner: 'bg-amber-500/10 border-amber-500/25 text-amber-200 shadow-[0_0_8px_rgba(245,158,11,0.1)]'
         };
       case 'medium':
         return {
-          bg: 'bg-[#FEFCE8]',
-          border: 'border-[#CA8A04]',
-          text: 'text-[#854D0E]',
-          badge: 'bg-[#CA8A04] text-[#854D0E]',
-          banner: 'bg-[#FEFCE8] border-[#CA8A04] text-[#854D0E]'
+          bg: 'bg-indigo-500/10',
+          border: 'border-indigo-500/20',
+          text: 'text-indigo-200',
+          badge: 'bg-indigo-500 text-white shadow-[0_0_8px_rgba(99,102,241,0.15)]',
+          banner: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-200'
         };
       default:
         return {
-          bg: 'bg-[#F0FDF4]',
-          border: 'border-[#16A34A]',
-          text: 'text-[#166534]',
-          badge: 'bg-[#16A34A] text-white',
-          banner: 'bg-[#F0FDF4] border-[#16A34A] text-[#166534]'
+          bg: 'bg-emerald-500/10',
+          border: 'border-emerald-500/20',
+          text: 'text-emerald-200',
+          badge: 'bg-emerald-500 text-white shadow-[0_0_8px_rgba(16,185,129,0.15)]',
+          banner: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
         };
     }
   })();
@@ -133,96 +134,97 @@ export default function VisitDetail() {
     <div className="space-y-6 max-w-4xl mx-auto">
       
       {/* Action navigation row */}
-      <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-4 no-print gap-4">
-        <div className="flex items-center space-x-3.5">
+      <div className="flex items-center justify-between border-b border-white/5 pb-6 no-print gap-4">
+        <div className="flex items-center space-x-4">
           <Link 
             to="/" 
-            className="p-2 bg-white border border-slate-300 hover:bg-[#EEF1F6] rounded-lg text-slate-500 hover:text-[#0A1628] transition-colors focus:outline-none"
+            className="p-2 bg-slate-900/40 border border-white/5 hover:border-white/10 hover:bg-slate-900/60 rounded-xl text-slate-300 transition-all active:scale-[0.98]"
             title="Return to prioritized desk"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h2 className="text-[22px] font-bold text-[#0A1628] uppercase tracking-tight">Visit File Compiled</h2>
-            <p className="text-xs text-slate-500 font-semibold mt-0.5 uppercase tracking-wider">Triage scoring and structured report review</p>
+            <h2 className="text-[20px] font-black text-white uppercase tracking-tight font-display">Visit File Compiled</h2>
+            <p className="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wider">Triage scoring and structured report review</p>
           </div>
         </div>
 
         <div className="flex items-center space-x-3">
-          {/* Print Button (Required design specifications) */}
+          {/* Print Button */}
           <button
             onClick={handlePrint}
-            className="flex items-center space-x-2 bg-[#1A3461] hover:bg-[#0A1628] active:scale-[0.98] text-white font-bold text-xs uppercase px-4 h-10 rounded-lg tracking-wider transition-all duration-150 cursor-pointer shadow-md border border-[#1A3461]"
+            className="flex items-center space-x-2 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white font-extrabold text-xs uppercase px-4 h-10 rounded-xl tracking-wider transition-all duration-150 cursor-pointer shadow-lg active:scale-[0.98]"
           >
-            <Printer className="w-4 h-4 text-[#13B5A6]" />
+            <Printer className="w-4.5 h-4.5 text-white" />
             <span>Print Official Report</span>
           </button>
         </div>
       </div>
 
       {/* Audit Pipeline Info Box */}
-      <div className="bg-[#EEF1F6] border border-[#CBD5E1] rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 no-print shadow-sm">
+      <div className="bg-[#0b1329]/40 border border-white/5 rounded-2xl p-4.5 flex flex-col md:flex-row md:items-center justify-between gap-4 no-print shadow-2xl backdrop-blur-md relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/5 rounded-full blur-2xl pointer-events-none"></div>
         <div className="flex items-center space-x-3 text-xs">
-          <span className="text-lg leading-none">🤖</span>
+          <span className="text-lg leading-none animate-bounce">🤖</span>
           <div>
-            <p className="font-bold text-[#0A1628]">5-Stage Agentic Audit Complete</p>
-            <p className="text-[11px] text-slate-500 font-semibold mt-0.5">
-              Pipeline Status: <span className="text-[#0D7A6F] font-bold uppercase">{visit.status}</span>
+            <p className="font-extrabold text-white">5-Stage Agentic Audit Complete</p>
+            <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-wider">
+              Pipeline Status: <span className="text-teal-400 font-black uppercase">{visit.status}</span>
             </p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-3 text-xs">
+        <div className="flex items-center space-x-3 text-xs z-10">
           {visit.extractedData?.source === 'fallback' || visit.report?.source === 'fallback' ? (
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#9A3412] bg-[#FFF7ED] border border-[#EA580C] px-3 py-1 rounded-md">
+            <span className="text-[9px] font-black uppercase tracking-widest text-amber-300 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-lg">
               ⚠️ Local Fallback Engine Utilized
             </span>
           ) : (
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#166534] bg-[#F0FDF4] border border-[#16A34A] px-3 py-1 rounded-md flex items-center space-x-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-ping"></span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-emerald-300 bg-emerald-500/10 border border-emerald-500/15 px-3 py-1 rounded-lg flex items-center space-x-1.5 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
               <span>Google Gemini AI Inference</span>
             </span>
           )}
 
           <Link
             to="/pipeline"
-            className="text-xs font-bold text-[#0F9B8E] hover:underline uppercase tracking-wider"
+            className="text-[10px] font-black text-teal-400 hover:text-teal-300 hover:underline uppercase tracking-wider"
           >
             Trace Execution ➡️
           </Link>
         </div>
       </div>
 
-      {/* 5-Stage Trace Log Audit Replay (IMPROVEMENT 2) */}
+      {/* 5-Stage Trace Log Audit Replay */}
       {visit.trace && visit.trace.length > 0 && (
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 space-y-4 no-print shadow-sm">
-          <div className="flex items-center justify-between border-b pb-2.5">
-            <h4 className="text-xs font-bold text-[#0A1628] uppercase tracking-wider flex items-center space-x-2">
-              <span className="text-base">⏱️</span>
+        <div className="bg-[#0b1329]/30 border border-white/5 rounded-2xl p-5 space-y-4 no-print shadow-2xl backdrop-blur-sm">
+          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-2 font-display">
+              <Activity className="w-4 h-4 text-teal-400 animate-pulse" />
               <span>Execution Trace Audit Log Replay</span>
             </h4>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide bg-[#EEF1F6] px-2.5 py-1 rounded-md flex items-center space-x-1">
-              <span>Verified Audit Trail</span>
+            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest bg-slate-950/40 px-2.5 py-1 rounded-lg border border-white/5">
+              Verified Audit Trail
             </span>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3.5">
             {(visit.trace || []).map((t, idx) => {
               const statusColors = t.status === 'complete' 
-                ? 'text-[#166534] bg-[#F0FDF4] border-[#16A34A]' 
+                ? 'text-emerald-300 bg-emerald-500/5 border-emerald-500/20 shadow-[0_0_8px_rgba(16,185,129,0.05)]' 
                 : t.status === 'fallback' 
-                  ? 'text-[#92400E] bg-[#FFF7ED] border-[#D97706]' 
-                  : 'text-slate-500 bg-slate-50 border-slate-200';
+                  ? 'text-amber-300 bg-amber-500/5 border-amber-500/20' 
+                  : 'text-slate-500 bg-slate-950/20 border-white/5';
               return (
-                <div key={idx} className={`p-3 rounded-lg border text-center space-y-1.5 ${statusColors} relative flex flex-col justify-between shadow-xs`}>
-                  <div className="text-[10px] font-bold uppercase tracking-wider leading-tight">
+                <div key={idx} className={`p-3.5 rounded-xl border text-center space-y-1.5 ${statusColors} relative flex flex-col justify-between shadow-xs transition-all duration-150`}>
+                  <div className="text-[9px] font-black uppercase tracking-widest leading-tight">
                     {t.stage.replace('_', ' ')}
                   </div>
-                  <div className="text-[9px] font-medium leading-normal italic text-slate-500 line-clamp-2" title={t.summary}>
+                  <div className="text-[10px] font-semibold leading-relaxed italic text-slate-400 line-clamp-2" title={t.summary}>
                     "{t.summary}"
                   </div>
-                  <div className="text-[8px] font-bold opacity-60 flex items-center justify-center space-x-1">
-                    <span>⏱️</span>
+                  <div className="text-[8px] font-black opacity-60 flex items-center justify-center space-x-1 uppercase tracking-wider">
+                    <Clock className="w-2.5 h-2.5" />
                     <span>{t.timestamp ? new Date(t.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '0.0s'}</span>
                   </div>
                 </div>
@@ -235,20 +237,21 @@ export default function VisitDetail() {
       {/* ======================================================== */}
       {/* SECTION A — Worker's Original Note (SCREEN ONLY, NO-PRINT) */}
       {/* ======================================================== */}
-      <div className="bg-[#EEF1F6] border-l-4 border-l-[#CBD5E1] rounded-r-xl p-5 space-y-2.5 no-print shadow-sm">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-          <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center space-x-2">
+      <div className="bg-[#0b1329]/40 border-l-4 border-l-slate-600 rounded-r-2xl p-5 space-y-3 no-print shadow-2xl backdrop-blur-md relative">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-slate-500/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div className="flex items-center justify-between border-b border-white/5 pb-2.5 z-10 relative">
+          <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center space-x-2">
             <span className="text-sm">🗣️</span>
             <span>Section A • Original Verbatim Field Note</span>
           </h4>
-          <span className="text-[10px] font-bold text-slate-400 uppercase bg-slate-200 px-2.5 py-0.5 rounded-[6px]">
+          <span className="text-[9px] font-black text-slate-400 uppercase bg-slate-950/40 border border-white/5 px-2.5 py-1 rounded-lg tracking-widest">
             RECORDED IN {sourceLangLabel}
           </span>
         </div>
-        <p className="text-sm italic text-slate-600 font-medium leading-relaxed bg-white p-3.5 border border-slate-200 rounded-lg shadow-inner">
+        <p className="text-xs italic text-slate-300 font-semibold leading-relaxed bg-slate-950/40 p-3.5 border border-white/5 rounded-xl shadow-inner relative z-10">
           "{visit.rawTranscript || visit.transcript || 'No spoken transcript captured.'}"
         </p>
-        <div className="flex items-center justify-between text-[11px] text-[#9CA3AF] font-semibold">
+        <div className="flex items-center justify-between text-[9px] text-slate-500 font-black uppercase tracking-widest z-10 relative">
           <span>Source recording preserved for audit purposes</span>
           <span>Non-Printable Section</span>
         </div>
@@ -258,14 +261,14 @@ export default function VisitDetail() {
       {/* SECTION B — Official Health Visit Report (PRINT-READY) */}
       {/* ======================================================== */}
       <div ref={reportRef} className="no-print pt-3">
-        <span className="inline-block bg-[#0A1628] text-[#13B5A6] font-bold text-[11px] uppercase tracking-widest px-4 py-1.5 rounded-t-lg shadow-sm">
+        <span className="inline-block bg-[#0A1628] border-t border-x border-white/5 text-teal-400 font-black text-[10px] uppercase tracking-widest px-4.5 py-2.5 rounded-t-xl shadow-lg font-display">
           Section B • Official Health Report
         </span>
       </div>
 
       <div 
         ref={printComponentRef} 
-        className="printable-report bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04)] border border-[#E2E8F0] p-8 space-y-6 print:border-none print:shadow-none print:p-1.5 print:space-y-2.5"
+        className="printable-report bg-white rounded-r-2xl rounded-bl-2xl shadow-[0_10px_35px_rgba(0,0,0,0.4)] border border-[#E2E8F0] p-8 space-y-6 print:border-none print:shadow-none print:p-1.5 print:space-y-2.5"
       >
         {/* Embedded print overrides to guarantee perfect full-page 100% scaling and background colors */}
         <style dangerouslySetInnerHTML={{__html: `
@@ -301,8 +304,8 @@ export default function VisitDetail() {
         `}} />
 
         {/* Top Header Band */}
-        <div className="bg-[#0A1628] text-white p-6 rounded-t-lg -mx-8 -mt-8 flex flex-col md:flex-row print:flex-row md:items-center print:items-center justify-between gap-4 print:bg-[#0A1628] print:text-white print:-mx-0 print:-mt-0 print:p-2.5 print:py-2 print:rounded-none">
-          <div className="space-y-0.5">
+        <div className="bg-[#0A1628] text-white p-6 rounded-t-xl -mx-8 -mt-8 flex flex-col md:flex-row print:flex-row md:items-center print:items-center justify-between gap-4 print:bg-[#0A1628] print:text-white print:-mx-0 print:-mt-0 print:p-2.5 print:py-2 print:rounded-none">
+          <div className="space-y-1">
             <h3 className="text-sm print:text-xs font-bold tracking-widest text-[#13B5A6] uppercase">
               SAHAYAK AI — OFFICIAL HEALTH VISIT REPORT
             </h3>

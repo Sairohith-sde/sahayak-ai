@@ -1,58 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Design System Colors */
-  --bg-base: #F4F6F9;
-  --bg-surface: #FFFFFF;
-  --bg-surface-2: #EEF1F6;
+  /* Design System Colors - Premium Obsidian Dark Theme Standard */
+  --bg-base: #030712;
+  --bg-surface: #0b1329;
+  --bg-surface-2: #16223f;
 
-  /* Primary Navy */
-  --primary-900: #0A1628;
-  --primary-800: #0F2044;
-  --primary-700: #1A3461;
-  --primary-600: #1E3F75;
-  --primary-500: #2952A3;
+  /* Primary Navy & Steel Accent */
+  --primary-900: #030712;
+  --primary-800: #0b1329;
+  --primary-700: #111e38;
+  --primary-600: #1a2a4d;
+  --primary-500: #2c4273;
 
-  /* Accent Teal */
-  --accent-600: #0D7A6F;
-  --accent-500: #0F9B8E;
-  --accent-400: #13B5A6;
-  --accent-100: #E0F5F3;
+  /* Accent Teal (Stitch-Inspired Glowing Aesthetics) */
+  --accent-600: #0f9b8e;
+  --accent-500: #13b5a6;
+  --accent-400: #20ebd4;
+  --accent-100: #e0f5f3;
 
-  /* Clinical Risk Indicators */
-  --risk-critical-bg: #FEF2F2;
-  --risk-critical-border: #DC2626;
-  --risk-critical-text: #991B1B;
-  --risk-critical-badge: #DC2626;
+  /* Clinical Risk Indicators (High-Contrast Neon Alert Badges) */
+  --risk-critical-bg: rgba(244, 63, 94, 0.12);
+  --risk-critical-border: #f43f5e;
+  --risk-critical-text: #fda4af;
+  --risk-critical-badge: #f43f5e;
 
-  --risk-high-bg: #FFF7ED;
-  --risk-high-border: #EA580C;
-  --risk-high-text: #9A3412;
-  --risk-high-badge: #EA580C;
+  --risk-high-bg: rgba(245, 158, 11, 0.12);
+  --risk-high-border: #f59e0b;
+  --risk-high-text: #fde047;
+  --risk-high-badge: #f59e0b;
 
-  --risk-medium-bg: #FEFCE8;
-  --risk-medium-border: #CA8A04;
-  --risk-medium-text: #854D0E;
-  --risk-medium-badge: #CA8A04;
+  --risk-medium-bg: rgba(99, 102, 241, 0.12);
+  --risk-medium-border: #6366f1;
+  --risk-medium-text: #c7d2fe;
+  --risk-medium-badge: #6366f1;
 
-  --risk-low-bg: #F0FDF4;
-  --risk-low-border: #16A34A;
-  --risk-low-text: #166534;
-  --risk-low-badge: #16A34A;
+  --risk-low-bg: rgba(16, 185, 129, 0.12);
+  --risk-low-border: #10b981;
+  --risk-low-text: #a7f3d0;
+  --risk-low-badge: #10b981;
 
   /* Text Colors */
-  --text-primary: #0A1628;
-  --text-secondary: #4B5563;
-  --text-muted: #9CA3AF;
-  --text-label: #6B7280;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --text-label: #9ca3af;
 
-  /* Borders */
-  --border-default: #E2E8F0;
-  --border-strong: #CBD5E1;
+  /* Borders (Ultra-Thin Translucent Dividers) */
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
 }
 
 @layer base {
@@ -62,6 +62,9 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
   }
 }
 

@@ -1,0 +1,63 @@
+name: Sahayak AI — Production-Grade CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  audit-test-pipeline:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install Monorepo & Child Workspace Dependencies
+      run: |
+        npm install
+        npm run client:install
+        npm run server:install
+
+    - name: Run Code Linter
+      run: npm run lint
+      continue-on-error: true
+
+    - name: Run Vitest (Unit, Integration, API, & Security Test Suites)
+      run: npm run test:unit
+
+    - name: Generate Code Coverage Report
+      run: npm run test:coverage
+      continue-on-error: true
+
+    - name: Upload Coverage Results to Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: code-coverage-report-node-${{ matrix.node-version }}
+        path: coverage/
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Run Playwright E2E, A11y, Visual & Performance Tests
+      run: npm run test:e2e
+      env:
+        PLAYWRIGHT_BASE_URL: https://sahayak-portal-nhm.vercel.app
+
+    - name: Upload Playwright Trace & Screen Reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-execution-report-node-${{ matrix.node-version }}
+        path: playwright-report/

@@ -3,7 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/index.js';
 import { useAuthStore } from '../store/auth.js';
-import { Mic, MicOff, AlertCircle, Sparkles, Copy, FileText, ArrowLeft, Check, Globe, Laptop, RefreshCw } from 'lucide-react';
+import { Mic, MicOff, AlertCircle, Sparkles, Copy, FileText, ArrowLeft, Check, Globe, Laptop, RefreshCw, AudioLines } from 'lucide-react';
 
 const LANGUAGES = [
   { code: 'en-IN', name: 'English', flag: '🇬🇧' },
@@ -29,7 +29,7 @@ const LANGUAGE_PLACEHOLDERS = {
   'mr-IN': "येथे क्षेत्रीय निरीक्षणे प्रविष्ट करा (ताप, खोकला, सुटलेली लस)...",
   'bn-IN': "এখানে ক্ষেত্রের পর্যবেক্ষণ লিখুন (জ্বর, কাশি, মিস হওয়া টিকা)...",
   'pa-IN': "ਇੱਥੇ ਖੇਤਰ ਦੇ ਨਿਰੀਖਣ ਦਰਜ ਕਰੋ (ਬੁਖਾਰ, ਖੰਘ, ਖੁੰਝੀ ਹੋਈ ਵੈਕਸੀਨ)...",
-  'gu-IN': "અહીં ક્ષેત્રીય અવલોકનો દાખલ કરો (તાવ, ખાંસી, ચુકી ગયેલી રસી)...",
+  'gu-IN': "અહીં ક્ષેત્રીય અવલોકनो દાખલ કરો (તાવ, ખાંસી, ચુકી ગયેલી રસી)...",
   'or-IN': "ଏଠାରେ କ୍ଷେତ୍ର ନିରୀକ୍ଷଣ ପ୍ରବେଶ କରନ୍ତୁ (ଜ୍ଵର, କାଶ, ଟିକା ଛୁଟିଯାଇଛି)..."
 };
 
@@ -230,15 +230,15 @@ export default function RecordVisit() {
       wavePhaseRef.current += isRecording ? 0.08 : 0.015;
 
       const waves = [
-        { color: 'rgba(15, 155, 142, 0.4)', amplitude: isRecording ? 25 : 4, frequency: 0.015 },
-        { color: 'rgba(30, 63, 117, 0.25)', amplitude: isRecording ? 18 : 2, frequency: 0.02 },
-        { color: 'rgba(19, 181, 166, 0.5)', amplitude: isRecording ? 12 : 1, frequency: 0.03 }
+        { color: 'rgba(19, 181, 166, 0.45)', amplitude: isRecording ? 25 : 4, frequency: 0.015 },
+        { color: 'rgba(32, 235, 212, 0.25)', amplitude: isRecording ? 18 : 2, frequency: 0.02 },
+        { color: 'rgba(255, 255, 255, 0.1)', amplitude: isRecording ? 12 : 1, frequency: 0.03 }
       ];
 
       waves.forEach(w => {
         ctx.beginPath();
         ctx.strokeStyle = w.color;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2;
 
         for (let x = 0; x < width; x++) {
           const y = midY + Math.sin(x * w.frequency + wavePhaseRef.current) * w.amplitude;
@@ -357,7 +357,7 @@ export default function RecordVisit() {
 
   const toggleRecording = () => {
     if (!recognitionRef.current) {
-      setErrorMessage('Browser Speech-to-Text is unsupported. Please typeobservations in the editor box.');
+      setErrorMessage('Browser Speech-to-Text is unsupported. Please type observations in the editor box.');
       return;
     }
 
@@ -415,23 +415,24 @@ export default function RecordVisit() {
     <div className="space-y-6">
       
       {/* Page Header */}
-      <div className="flex items-center space-x-3.5 border-b border-[#E2E8F0] pb-4">
+      <div className="flex items-center space-x-4 border-b border-white/5 pb-6">
         <Link 
           to="/" 
-          className="p-2 bg-white border border-slate-300 hover:bg-[#EEF1F6] rounded-lg text-slate-500 hover:text-[#0A1628] transition-colors focus:outline-none"
+          className="p-2 bg-slate-900/40 border border-white/5 hover:border-white/10 hover:bg-slate-900/60 rounded-xl text-slate-300 transition-all active:scale-[0.98]"
           title="Return to prioritized desk"
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
-          <h2 className="text-[22px] font-bold text-[#0A1628] uppercase tracking-tight">New Field Visit Record</h2>
-          <p className="text-xs text-slate-500 font-semibold mt-0.5 uppercase tracking-wider">Log raw frontline observations to run Decision Triage checks</p>
+          <h2 className="text-[20px] font-black text-white uppercase tracking-tight font-display">New Field Visit Record</h2>
+          <p className="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wider">Log raw frontline observations to run Decision Triage checks</p>
         </div>
       </div>
 
       {errorMessage && (
-        <div className="bg-red-50 border border-[#DC2626] text-[#991B1B] px-4 py-3.5 rounded-lg text-xs flex items-start space-x-2.5 font-medium shadow-sm">
-          <AlertCircle className="w-4.5 h-4.5 flex-shrink-0 mt-0.5" />
+        <div className="bg-red-500/10 border border-red-500/20 text-red-200 px-4 py-3.5 rounded-xl text-xs flex items-start space-x-2.5 font-semibold shadow-2xl relative">
+          <div className="absolute -inset-[1px] bg-red-500/10 rounded-xl -z-10 blur-sm"></div>
+          <AlertCircle className="w-4.5 h-4.5 flex-shrink-0 mt-0.5 text-red-400" />
           <span>{errorMessage}</span>
         </div>
       )}
@@ -441,21 +442,22 @@ export default function RecordVisit() {
         
         {/* ==================== LEFT COLUMN (60% Width) ==================== */}
         <div className="lg:col-span-6 space-y-6">
-          <div className="bg-white rounded-lg border border-[#E2E8F0] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] space-y-6">
+          <div className="bg-[#0b1329]/40 border border-white/5 p-6 rounded-2xl backdrop-blur-md shadow-2xl space-y-6 relative">
+            <div className="absolute -inset-[1px] bg-gradient-to-r from-teal-500/5 to-cyan-500/5 rounded-2xl -z-10 blur-sm pointer-events-none"></div>
             
             {/* 1. Household Select Dropdown */}
             <div className="space-y-2">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 1. Select Registered Household Location
               </label>
               <select
                 value={selectedHouseId}
                 onChange={(e) => setSelectedHouseId(e.target.value)}
-                className="w-full h-12 px-3 border border-slate-300 bg-white rounded-lg text-sm text-[#0A1628] focus-ring font-semibold cursor-pointer"
+                className="w-full h-12 px-4 border border-white/5 bg-slate-950/40 text-white rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500/30 transition-all font-semibold cursor-pointer appearance-none"
               >
-                <option value="">-- CHOOSE HOUSEHOLD LOCATION --</option>
+                <option value="" className="bg-slate-900 text-slate-400">-- CHOOSE HOUSEHOLD LOCATION --</option>
                 {households?.map((h) => (
-                  <option key={h._id || h.id} value={h._id || h.id}>
+                  <option key={h._id || h.id} value={h._id || h.id} className="bg-slate-900">
                     {h.name} ({h.village}) • {h.category.toUpperCase()}
                   </option>
                 ))}
@@ -464,7 +466,7 @@ export default function RecordVisit() {
 
             {/* 2. Interactive Flag-Pill Language Selector */}
             <div className="space-y-2">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 2. Input Dictation Language (Select once)
               </label>
               <div className="flex flex-wrap gap-2">
@@ -474,10 +476,10 @@ export default function RecordVisit() {
                     <button
                       key={lang.code}
                       onClick={() => handleLanguageChange(lang.code)}
-                      className={`px-3 py-2 rounded-lg text-xs font-semibold flex items-center space-x-1.5 cursor-pointer border transition-all duration-150 select-none ${
+                      className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 cursor-pointer border transition-all duration-150 select-none ${
                         isSelected 
-                          ? 'bg-[#E0F5F3] border-[#0F9B8E] text-[#0D7A6F] font-bold shadow-sm scale-[1.02]' 
-                          : 'bg-white border-slate-300 hover:bg-slate-50 text-slate-600'
+                          ? 'bg-teal-500/10 border-teal-500/30 text-teal-300 shadow-lg scale-[1.02]' 
+                          : 'bg-slate-950/20 border-white/5 hover:bg-white/5 hover:border-white/10 text-slate-400'
                       }`}
                     >
                       <span className="text-sm leading-none">{lang.flag}</span>
@@ -489,12 +491,12 @@ export default function RecordVisit() {
             </div>
 
             {isDemo && recordingStatus !== 'complete' && (
-              <div className="bg-[#E0F5F3] border-2 border-dashed border-[#0F9B8E] rounded-xl p-5 mb-4 text-center space-y-2 animate-bounce">
-                <p className="text-xs font-bold text-[#0D7A6F] uppercase tracking-widest">⚡ SPEAK THIS SENTENCE (LIVE DEMO ACTIVE):</p>
-                <p className="text-lg font-extrabold text-[#0A1628] leading-relaxed select-all">
+              <div className="bg-teal-500/10 border border-teal-500/20 rounded-2xl p-5 mb-4 text-center space-y-2.5 animate-pulse">
+                <p className="text-[10px] font-black text-teal-400 uppercase tracking-widest">⚡ SPEAK THIS SENTENCE (LIVE DEMO ACTIVE):</p>
+                <p className="text-base font-black text-white leading-relaxed select-all font-display">
                   "మీన పిల్లవాడు, రెండవ సారి వచ్చాను, బరువు ఇంకా పెరగలేదు, అమ్మ చెప్పింది చివరి టీకా వేయలేదు అని."
                 </p>
-                <p className="text-xs font-bold text-slate-500 italic mt-1">
+                <p className="text-[10px] font-bold text-slate-400 italic mt-1.5 uppercase tracking-wide">
                   (Meena's child, second visit, weight still not gaining, mother says last vaccine was missed)
                 </p>
               </div>
@@ -502,10 +504,10 @@ export default function RecordVisit() {
 
             {/* 3. Siri sinwave & microphone action board */}
             <div className="space-y-2">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 3. Dictation Recording Ingestion Feed
               </label>
-              <div className="border border-slate-200 rounded-xl bg-[#EEF1F6] p-6 flex flex-col items-center justify-center space-y-4 shadow-inner relative overflow-hidden min-h-[160px]">
+              <div className="border border-white/5 rounded-2xl bg-slate-950/40 p-6 flex flex-col items-center justify-center space-y-4 shadow-inner relative overflow-hidden min-h-[160px]">
                 
                 {/* Siri Sinus Wave canvas */}
                 <canvas 
@@ -518,24 +520,19 @@ export default function RecordVisit() {
                 {/* Status messages depending on state */}
                 <div className="text-center">
                   {recordingStatus === 'idle' && (
-                    <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">TAP TO INITIATE MIC FEED</p>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">TAP TO INITIATE MIC FEED</p>
                   )}
                   {recordingStatus === 'recording' && (
-                    <div className="space-y-1.5">
-                      <p className="text-xs text-[#991B1B] font-bold uppercase tracking-widest animate-pulse">RECORDING ACTIVE — SPEAK NATURALLY</p>
-                      {/* CSS pulse waves */}
-                      <div className="flex justify-center items-center gap-1.5 h-6">
-                        <div className="w-1 bg-[#DC2626] rounded-full animate-wave-bar" style={{animationDelay: '0.1s'}}></div>
-                        <div className="w-1 bg-[#DC2626] rounded-full animate-wave-bar" style={{animationDelay: '0.3s'}}></div>
-                        <div className="w-1 bg-[#DC2626] rounded-full animate-wave-bar" style={{animationDelay: '0.5s'}}></div>
-                        <div className="w-1 bg-[#DC2626] rounded-full animate-wave-bar" style={{animationDelay: '0.2s'}}></div>
-                        <div className="w-1 bg-[#DC2626] rounded-full animate-wave-bar" style={{animationDelay: '0.4s'}}></div>
-                      </div>
+                    <div className="space-y-2">
+                      <p className="text-[10px] text-red-400 font-bold uppercase tracking-widest flex items-center justify-center space-x-1">
+                        <AudioLines className="w-4 h-4 text-red-400 animate-pulse" />
+                        <span className="animate-pulse">RECORDING ACTIVE — SPEAK NATURALLY</span>
+                      </p>
                     </div>
                   )}
                   {recordingStatus === 'complete' && (
-                    <p className="text-xs text-[#166534] font-bold uppercase tracking-wider flex items-center justify-center space-x-1">
-                      <Check className="w-4 h-4 text-[#16A34A] stroke-[3px]" />
+                    <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider flex items-center justify-center space-x-1">
+                      <Check className="w-4 h-4 text-emerald-400 stroke-[3px]" />
                       <span>VOICE TRANSCRIPT SUCCESSFULLY INGESTED</span>
                     </p>
                   )}
@@ -544,10 +541,10 @@ export default function RecordVisit() {
                 {/* Center Record button */}
                 <button
                   onClick={toggleRecording}
-                  className={`flex items-center space-x-2.5 px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow transition-all duration-150 cursor-pointer active:scale-95 ${
+                  className={`flex items-center space-x-2.5 px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg transition-all duration-150 cursor-pointer active:scale-95 ${
                     isRecording 
-                      ? 'bg-[#DC2626] text-white hover:bg-red-700 animate-pulse' 
-                      : 'bg-[#0A1628] hover:bg-[#1A3461] text-white'
+                      ? 'bg-red-600 text-white hover:bg-red-500 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]' 
+                      : 'bg-slate-900 border border-white/5 hover:bg-slate-850 hover:border-white/10 text-white'
                   }`}
                 >
                   {isRecording ? (
@@ -557,7 +554,7 @@ export default function RecordVisit() {
                     </>
                   ) : (
                     <>
-                      <Mic className="w-4 h-4 text-[#13B5A6]" />
+                      <Mic className="w-4 h-4 text-teal-400" />
                       <span>START RECORDING</span>
                     </>
                   )}
@@ -568,10 +565,10 @@ export default function RecordVisit() {
             {/* 4. Observations Editor TextArea */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">
                   4. Raw Spoken Text / Observation Draft
                 </label>
-                <span className="text-[10px] font-bold text-slate-400 bg-[#EEF1F6] px-2 py-0.5 rounded border">
+                <span className="text-[9px] font-black text-slate-400 bg-slate-950/40 px-2.5 py-1 rounded-lg border border-white/5 uppercase tracking-wider">
                   Manual Corrective Editor
                 </span>
               </div>
@@ -582,7 +579,7 @@ export default function RecordVisit() {
                   if (e.target.value) setRecordingStatus('complete');
                 }}
                 rows={6}
-                className="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm bg-white focus-ring text-[#0A1628] font-medium leading-relaxed"
+                className="w-full px-4 py-3 border border-white/5 rounded-xl text-sm bg-slate-950/40 text-white focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500/30 transition-all font-semibold leading-relaxed"
                 placeholder={LANGUAGE_PLACEHOLDERS[selectedLang] || "Enter observation notes..."}
               />
             </div>
@@ -591,7 +588,7 @@ export default function RecordVisit() {
             <button
               onClick={handleSubmitVisit}
               disabled={visitMutation.isPending}
-              className="w-full h-12 bg-[#0D7A6F] hover:bg-[#0F9B8E] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center space-x-2.5 border border-[#0D7A6F] shadow"
+              className="w-full h-12 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all duration-150 cursor-pointer flex items-center justify-center space-x-2.5 border border-teal-500/20 shadow-lg active:scale-[0.98]"
             >
               <FileText className="w-4 h-4 text-white" />
               <span>{visitMutation.isPending ? 'Executing AI Decision Pipeline...' : 'Process Co-Pilot Triage'}</span>
@@ -604,41 +601,43 @@ export default function RecordVisit() {
         <div className="lg:col-span-4 space-y-6">
           
           {/* Live pipeline status visualizer panel */}
-          <div className="bg-white rounded-lg border border-[#E2E8F0] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] space-y-5">
-            <h3 className="text-xs font-bold text-[#0A1628] uppercase tracking-wider border-b pb-3 flex items-center space-x-1.5">
-              <Sparkles className="w-4 h-4 text-[#0F9B8E]" />
+          <div className="bg-[#0b1329]/40 border border-white/5 p-6 rounded-2xl backdrop-blur-md shadow-2xl space-y-5 relative">
+            <div className="absolute -inset-[1px] bg-gradient-to-r from-teal-500/5 to-cyan-500/5 rounded-2xl -z-10 blur-sm pointer-events-none"></div>
+            
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider border-b border-white/5 pb-3.5 flex items-center space-x-1.5 font-display">
+              <Sparkles className="w-4 h-4 text-teal-400 animate-pulse" />
               <span>Real-Time Clinical Trace Auditor</span>
             </h3>
 
             {(visitMutation.isPending || isPipelineStreaming) ? (
               <div className="relative pl-6 space-y-6 py-2">
                 {/* Timeline vertical bar */}
-                <div className="absolute top-2 left-2.5 bottom-2 w-0.5 bg-slate-100 z-0"></div>
+                <div className="absolute top-2 left-2.5 bottom-2 w-0.5 bg-white/5 z-0"></div>
                 
                 {pipelineStages.map((stage) => {
                   const getStageIcon = (status) => {
                     switch (status) {
                       case 'active':
                         return (
-                          <div className="w-5 h-5 rounded-full border-2 border-[#0F9B8E] flex items-center justify-center bg-white flex-shrink-0 z-10 animate-pulse">
-                            <div className="w-2.5 h-2.5 rounded-full bg-[#0F9B8E]" />
+                          <div className="w-5.5 h-5.5 rounded-full border-2 border-teal-400 flex items-center justify-center bg-slate-950 flex-shrink-0 z-10 animate-pulse shadow-[0_0_8px_rgba(20,184,166,0.3)]">
+                            <div className="w-2.5 h-2.5 rounded-full bg-teal-400" />
                           </div>
                         );
                       case 'complete':
                         return (
-                          <div className="w-5 h-5 rounded-full bg-[#16A34A] flex items-center justify-center text-white flex-shrink-0 z-10">
+                          <div className="w-5.5 h-5.5 rounded-full bg-emerald-500 flex items-center justify-center text-slate-950 flex-shrink-0 z-10 shadow-[0_0_8px_rgba(16,185,129,0.2)]">
                             <Check className="w-3.5 h-3.5 stroke-[3px]" />
                           </div>
                         );
                       case 'fallback':
                         return (
-                          <div className="w-5 h-5 rounded-full bg-[#D97706] flex items-center justify-center text-white flex-shrink-0 z-10">
+                          <div className="w-5.5 h-5.5 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 flex-shrink-0 z-10 shadow-[0_0_8px_rgba(245,158,11,0.2)]">
                             <Check className="w-3.5 h-3.5 stroke-[3px]" />
                           </div>
                         );
                       default:
                         return (
-                          <div className="w-5 h-5 rounded-full border border-slate-200 bg-white flex-shrink-0 z-10" />
+                          <div className="w-5.5 h-5.5 rounded-full border border-white/5 bg-slate-950 flex-shrink-0 z-10" />
                         );
                     }
                   };
@@ -647,7 +646,7 @@ export default function RecordVisit() {
                     <div key={stage.id} className="relative flex items-start space-x-4 z-10 animate-[fadeIn_150ms_ease-out]">
                       {getStageIcon(stage.status)}
                       <div className="leading-tight">
-                        <span className={`block text-xs font-bold ${stage.status === 'active' ? 'text-[#0D7A6F]' : stage.status === 'complete' ? 'text-[#166534]' : stage.status === 'fallback' ? 'text-[#B45309]' : 'text-slate-500'}`}>
+                        <span className={`block text-xs font-bold ${stage.status === 'active' ? 'text-teal-400' : stage.status === 'complete' ? 'text-emerald-400' : stage.status === 'fallback' ? 'text-amber-400' : 'text-slate-500'}`}>
                           {stage.label}
                         </span>
                         <span className="block text-[10px] text-slate-400 mt-1 font-semibold uppercase tracking-wide">
@@ -660,47 +659,47 @@ export default function RecordVisit() {
               </div>
             ) : (
               // Idle/Awaiting status empty state
-              <div className="py-8 text-center text-slate-400 space-y-3">
-                <Laptop className="w-12 h-12 mx-auto text-slate-300" />
+              <div className="py-8 text-center text-slate-500 space-y-4">
+                <Laptop className="w-12 h-12 mx-auto text-slate-600 animate-pulse" />
                 <div className="max-w-xs mx-auto">
-                  <p className="font-bold text-slate-600 text-xs uppercase tracking-wider">Awaiting Input Stream</p>
-                  <p className="text-[11px] text-slate-400 mt-1">Dictate or enter notes on the left. Clinically scoped details resolve here in real-time as the co-pilot works.</p>
+                  <p className="font-extrabold text-white text-xs uppercase tracking-wider">Awaiting Input Stream</p>
+                  <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed font-semibold">Dictate or enter notes on the left. Clinically scoped details resolve here in real-time as the co-pilot works.</p>
                 </div>
               </div>
             )}
           </div>
 
           {/* Quick Demo Assist Scripting Desk */}
-          <div className="bg-[#E0F5F3] border border-[#0F9B8E] rounded-lg p-5 space-y-4 shadow-sm">
-            <h4 className="text-xs font-bold text-[#0D7A6F] uppercase tracking-widest flex items-center space-x-1.5">
-              <Sparkles className="w-4 h-4 text-[#0D7A6F]" />
+          <div className="bg-teal-500/5 border border-teal-500/15 rounded-2xl p-5 space-y-4 shadow-2xl relative">
+            <h4 className="text-xs font-black text-teal-400 uppercase tracking-widest flex items-center space-x-1.5 font-display">
+              <Sparkles className="w-4 h-4 text-teal-400 animate-pulse" />
               <span>Official Demo Presets</span>
             </h4>
-            <p className="text-[11px] text-[#0D7A6F] font-semibold leading-relaxed">
+            <p className="text-[11px] text-slate-400 font-semibold leading-relaxed">
               Instantly apply pre-scripted multilingual test-cases to demonstrate real-time translations during evaluation.
             </p>
             
             <div className="space-y-2 text-[11px] font-semibold">
               <button
                 onClick={handleApplyEnglishDemo}
-                className="w-full flex items-center justify-between bg-white hover:bg-slate-50 border border-teal-200 p-2.5 rounded-lg text-teal-950 transition-colors cursor-pointer"
+                className="w-full flex items-center justify-between bg-slate-950/40 hover:bg-white/5 border border-white/5 hover:border-white/10 p-3 rounded-xl text-slate-300 transition-all cursor-pointer shadow active:scale-[0.98]"
               >
                 <span className="font-bold">🇬🇧 English Script</span>
-                <span className="text-[9px] font-bold uppercase bg-[#E0F5F3] px-2 py-0.5 rounded text-[#0D7A6F]">Apply</span>
+                <span className="text-[9px] font-black uppercase bg-teal-500/10 border border-teal-500/15 px-2 py-0.5 rounded text-teal-300">Apply</span>
               </button>
               <button
                 onClick={handleApplyHindiDemo}
-                className="w-full flex items-center justify-between bg-white hover:bg-slate-50 border border-teal-200 p-2.5 rounded-lg text-teal-950 transition-colors cursor-pointer"
+                className="w-full flex items-center justify-between bg-slate-950/40 hover:bg-white/5 border border-white/5 hover:border-white/10 p-3 rounded-xl text-slate-300 transition-all cursor-pointer shadow active:scale-[0.98]"
               >
                 <span className="font-bold">🇮🇳 हिन्दी (Hindi) Script</span>
-                <span className="text-[9px] font-bold uppercase bg-[#E0F5F3] px-2 py-0.5 rounded text-[#0D7A6F]">Apply</span>
+                <span className="text-[9px] font-black uppercase bg-teal-500/10 border border-teal-500/15 px-2 py-0.5 rounded text-teal-300">Apply</span>
               </button>
               <button
                 onClick={handleApplyTeluguDemo}
-                className="w-full flex items-center justify-between bg-white hover:bg-slate-50 border border-teal-200 p-2.5 rounded-lg text-teal-950 transition-colors cursor-pointer"
+                className="w-full flex items-center justify-between bg-slate-950/40 hover:bg-white/5 border border-white/5 hover:border-white/10 p-3 rounded-xl text-slate-300 transition-all cursor-pointer shadow active:scale-[0.98]"
               >
                 <span className="font-bold">🇮🇳 తెలుగు (Telugu) Script</span>
-                <span className="text-[9px] font-bold uppercase bg-[#E0F5F3] px-2 py-0.5 rounded text-[#0D7A6F]">Apply</span>
+                <span className="text-[9px] font-black uppercase bg-teal-500/10 border border-teal-500/15 px-2 py-0.5 rounded text-teal-300">Apply</span>
               </button>
             </div>
           </div>
