@@ -267,12 +267,17 @@ export default function VisitDetail() {
         ref={printComponentRef} 
         className="printable-report bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.04)] border border-[#E2E8F0] p-8 space-y-6 print:border-none print:shadow-none print:p-1.5 print:space-y-2.5"
       >
-        {/* Embedded print overrides to guarantee perfect full-page 100% scaling */}
+        {/* Embedded print overrides to guarantee perfect full-page 100% scaling and background colors */}
         <style dangerouslySetInnerHTML={{__html: `
           @media print {
+            * {
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+              color-adjust: exact !important;
+            }
             @page {
               size: A4 portrait;
-              margin: 6mm 10mm 6mm 10mm !important;
+              margin: 8mm 10mm 8mm 10mm !important;
             }
             .printable-report {
               zoom: 100% !important;
